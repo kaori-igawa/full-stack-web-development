@@ -6,7 +6,7 @@ services:
       --transaction-isolation=READ-COMMITTED
     restart: always
     environment:
-      MYSQL_ROOT_PASSWARD: passward
+      MYSQL_ROOT_PASSWORD: password
       TZ: Asia/Tokyo
     ports:
       - 53306:3306
