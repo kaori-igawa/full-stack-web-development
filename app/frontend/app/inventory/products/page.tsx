@@ -2,7 +2,40 @@ export default function Page() {
   return (
     <>
       <h2>商品一覧</h2>
-      <p>商品の一覧を表示</p>
+      <button>商品を追加する</button>
+      <table>
+        <thead>
+          <tr>
+            <th>商品ID</th>
+            <th>商品名</th>
+            <th>単価</th>
+            <th>説明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>コットン100%バックリボンティアードワンピース（黒）</td>
+            <td>6900</td>
+            <td>とにかくかわいいよ。</td>
+            <td><button>更新・削除</button></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>コットン100%バックリボンティアードワンピース（黒）</td>
+            <td>6900</td>
+            <td>とにかくかわいいよ。</td>
+            <td><button>更新・削除</button></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>コットン100%バックリボンティアードワンピース（黒）</td>
+            <td>6900</td>
+            <td>とにかくかわいいよ。</td>
+            <td><button>更新・削除</button></td>
+          </tr>
+        </tbody>
+      </table>
     </>
   )
 }
