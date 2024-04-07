@@ -1,4 +1,23 @@
+'use client'
+
+import { useState, useEffect } from "react";
+import productsData from './sample/dummy_products.json';
+
+type ProductData = {
+  id: number;
+  name: string;
+  price: number;
+  description: string;
+}
+
+
 export default function Page() {
+  const [data, setData] = useState<Array<ProductData>>([]);
+
+  useEffect(() => {
+    setData(productsData);
+  }, [])
+
   return (
     <>
       <h2>商品一覧</h2>
@@ -13,27 +32,15 @@ export default function Page() {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>コットン100%バックリボンティアードワンピース（黒）</td>
-            <td>6900</td>
-            <td>とにかくかわいいよ。</td>
-            <td><button>更新・削除</button></td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>コットン100%バックリボンティアードワンピース（黒）</td>
-            <td>6900</td>
-            <td>とにかくかわいいよ。</td>
-            <td><button>更新・削除</button></td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>コットン100%バックリボンティアードワンピース（黒）</td>
-            <td>6900</td>
-            <td>とにかくかわいいよ。</td>
-            <td><button>更新・削除</button></td>
-          </tr>
+          {data.map((item: ProductData) => (
+            <tr key={item.id}>
+              <td>{item.id}</td>
+              <td>{item.name}</td>
+              <td>{item.price}</td>
+              <td>{item.description}</td>
+              <td><button>更新・削除</button></td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </>
