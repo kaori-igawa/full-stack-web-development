@@ -11,13 +11,35 @@ type ProductData = {
   description: string;
 }
 
+type InputData = {
+  id: string;
+  name: string;
+  price: string;
+  description: string;
+}
+
 
 export default function Page() {
+  // 読み込みデータを保持
   const [data, setData] = useState<Array<ProductData>>([]);
 
   useEffect(() => {
     setData(productsData);
   }, [])
+
+  // 登録データを保持
+  const [input, setInput] = useState<InputData>({
+    id: '',
+    name: '',
+    price: '',
+    description: '',
+  })
+
+  const handleInput = (event: React.ChangeEvent<HTMLElement>) => {
+    const {value, name} = event.target;
+    console.log({value, name});
+    setInput({...input, [name]: value});
+  }
 
   // 新規登録処理
   const [shownNewRow, setShownNewRow] = useState(false);
@@ -44,6 +66,14 @@ export default function Page() {
   const handleEditRow: any = (id: number) => {
     setShownNewRow(false);
     setEditingRow(id);
+
+    const selectedProduct: ProductData = data.find((v) => v.id === id) as ProductData;
+    setInput({
+      id: id.toString(),
+      name: selectedProduct.name,
+      price: selectedProduct.price.toString(),
+      description: selectedProduct.description,
+    });
   }
 
   const handleEditCancel: any = (id: number) => {
@@ -77,9 +107,9 @@ export default function Page() {
           {shownNewRow ? (
             <tr>
               <td></td>
-              <td><input type="text" /></td>
-              <td><input type="number" /></td>
-              <td><input type="text" /></td>
+              <td><input type="text" name="name" onChange={handleInput} /></td>
+              <td><input type="number" name="price" onChange={handleInput} /></td>
+              <td><input type="text" name="description" onChange={handleInput} /></td>
               <td></td>
               <td>
                 <button onClick={(event) => handleAddCancel(event)}>キャンセル</button>
@@ -91,9 +121,9 @@ export default function Page() {
             editingRow === item.id ? (
               <tr key={item.id}>
               <td>{item.id}</td>
-              <td><input type="text" defaultValue={item.name} /></td>
-              <td><input type="number" defaultValue={item.price} /></td>
-              <td><input type="text" defaultValue={item.description} /></td>
+              <td><input type="text" defaultValue={item.name} name="name" onChange={handleInput} /></td>
+              <td><input type="number" defaultValue={item.price} name="price" onChange={handleInput} /></td>
+              <td><input type="text" defaultValue={item.description} name="description" onChange={handleInput} /></td>
               <td></td>
               <td>
                 <button onClick={() => handleEditCancel(item.id)}>キャンセル</button>
