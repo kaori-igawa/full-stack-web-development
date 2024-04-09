@@ -113,13 +113,29 @@ export default function Page() {
               <tr>
                 <td></td>
                 <td>
-                  <input type="text" id="name" {...register('name', { required: true, maxLength: 100})} />
-                  {errors.name && ( <div>100文字以内の商品名を入力してください</div> )}
+                  <input type="text" id="name" {...register('name', { 
+                    required: '必須項目です', 
+                    maxLength: {
+                      value: 100,
+                      message: '100文字以内の商品名を入力してください'
+                    }
+                  })} />
+                  {errors.name?.message && (<div>{ errors.name?.message as string}</div>)}
                 </td>
                 <td>
-                  <input type="number" id="price" {...register('price', { required: true, min: 1, max: 99999999})} />
-                  {errors.price && ( <div>1から99999999の数値を入力してください</div> )}
-                  </td>
+                  <input type="number" id="price" {...register('price', { 
+                    required: '必須項目です', 
+                    min: {
+                      value: 1,
+                      message: '1から99999999の数値を入力してください'
+                    }, 
+                    max: {
+                      value: 99999999,
+                      message: '1から99999999の数値を入力してください'
+                    }
+                  })} />
+                  {errors.price?.message && (<div>{ errors.price?.message as string}</div>)}
+                </td>
                 <td><input type="text" id="description" {...register('description')} /></td>
                 <td></td>
                 <td>
@@ -133,13 +149,29 @@ export default function Page() {
                 <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>
-                  <input type="text" id="name" {...register('name', { required: true, maxLength: 100})} />
-                  {errors.name && ( <div>100文字以内の商品名を入力してください</div> )}
+                  <input type="text" id="name" {...register('name', { 
+                    required: '必須項目です', 
+                    maxLength: {
+                      value: 100,
+                      message: '100文字以内の商品名を入力してください'
+                    }
+                  })} />
+                  {errors.name?.message && (<div>{ errors.name?.message as string}</div>)}
                 </td>
                 <td>
-                  <input type="number" id="price" {...register('price', { required: true, min: 1, max: 99999999})} />
-                  {errors.price && ( <div>1から99999999の数値を入力してください</div> )}
-                  </td>
+                  <input type="number" id="price" {...register('price', { 
+                    required: '必須項目です', 
+                    min: {
+                      value: 1,
+                      message: '1から99999999の数値を入力してください'
+                    }, 
+                    max: {
+                      value: 99999999,
+                      message: '1から99999999の数値を入力してください'
+                    }
+                  })} />
+                  {errors.price?.message && (<div>{ errors.price?.message as string}</div>)}
+                </td>
                 <td><input type="text" id="description" {...register('description')} /></td>
                 <td></td>
                 <td>
