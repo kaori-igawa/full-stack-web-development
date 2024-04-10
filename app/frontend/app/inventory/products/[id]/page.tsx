@@ -1,5 +1,21 @@
 'use client'
 
+import {
+  Alert,
+  AlertColor,
+  Box,
+  Button,
+  Paper,
+  Snackbar,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useState, useEffect } from "react";
 import productsData from '../sample/dummy_products.json';
@@ -12,7 +28,7 @@ type ProductData = {
   description: string;
 }
 
-type formData = {
+type FormData = {
   id: number;
   quantity: number;
 }
@@ -47,8 +63,32 @@ export default function Page({params}: {params: {id: number}}) {
   // submit時のactionを分岐させる
   const [action, setAction] = useState<string>('');
 
+  const [open, setOpen] = useState(false);
+  const [severity, setSeverity] = useState<AlertColor>('success');
+  const [message, setMessage] = useState('');
+  const result = (severty: AlertColor, message: string) => {
+    setOpen(true);
+    setSeverity(severty);
+    setMessage(message);
+  };
+
+  const handleClose = (e: any, reason: any) => {
+    setOpen(false);
+  }
+
+  useEffect(() => {
+    const selectedProduct: ProductData = productsData.find(v => v.id == params.id) ?? {
+      id: 0,
+      name: '',
+      price: 0,
+      description: '',
+    };
+    setProduct(selectedProduct);
+    setData(inventoriesData);
+  }, [open])
+
   const onSubmit = (e: any): void => {
-    const data: formData = {
+    const data: FormData = {
       id: Number(params.id),
       quantity: Number(e.quantity),
     }
@@ -60,86 +100,91 @@ export default function Page({params}: {params: {id: number}}) {
     }
   };
 
-  const handlePurchase = (data: formData) => {
-    console.log(`${data.quantity} 仕入れ`);
+  const handlePurchase = (data: FormData) => {
+    result('success', '商品を仕入れました')
     reset({
       id: null,
       quantity: null,
     })
   }
 
-  const handleSell = (data: formData) => {
-    console.log(`${data.quantity} 卸し`);
+  const handleSell = (data: FormData) => {
+    result('success', '商品を卸しました')
     reset({
       id: null,
       quantity: null,
     })
   }
-
-
-  useEffect(() => {
-    const selectedProduct: ProductData = productsData.find(v => v.id == params.id) ?? {
-      id: 0,
-      name: '',
-      price: 0,
-      description: '',
-    };
-    setProduct(selectedProduct);
-    setData(inventoriesData);
-  }, [])
 
   return (
     <>
-      <h2>商品在庫管理</h2>
-      <h3>在庫処理</h3>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label>商品名：</label>
-          <span>{product.name}</span>
-        </div>
-        <div>
-          <label>数量：</label>
-          <input type="number" id="quantity" {...register('quantity', { 
-                    required: '必須項目です', 
-                    min: {
-                      value: 1,
-                      message: '1から99999999の数値を入力してください'
-                    }, 
-                    max: {
-                      value: 99999999,
-                      message: '1から99999999の数値を入力してください'
-                    }
-                  })} />
-                  {errors.quantity?.message && (<div>{ errors.quantity?.message as string}</div>)}
-        </div>
-        <button type='submit' onClick={() => setAction('purchase')}>商品を仕入れる</button>
-        <button type='submit' onClick={() => setAction('sell')}>商品を卸す</button>
-      </form>
-      <h3>在庫履歴</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>処理種別</th>
-            <th>処理日時</th>
-            <th>単価</th>
-            <th>数量</th>
-            <th>価格</th>
-            <th>在庫数</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((data: InventoryData) => (
-            <tr key={data.id}>
-              <td>{data.type}</td>
-              <td>{data.date}</td>
-              <td>{data.unit}</td>
-              <td>{data.quantity}</td>
-              <td>{data.price}</td>
-              <td>{data.inventory}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
+        <Alert severity={severity}>{message}</Alert>
+      </Snackbar>
+      <Typography variant='h5'>商品在庫管理</Typography>
+      <Typography variant='h6'>在庫処理</Typography>
+      <Box component='form' onSubmit={handleSubmit(onSubmit)}>
+        <Box>
+          <TextField
+            disabled
+            fullWidth
+            id='name'
+            label='商品名'
+            variant='filled'
+            value={product.name}
+           />
+        </Box>
+        <Box>
+          <TextField
+            type='number'
+            id='quantity'
+            variant='filled'
+            label='数量'
+            {...register('quantity', { 
+              required: '必須項目です', 
+              min: {
+                value: 1,
+                message: '1から99999999の数値を入力してください'
+              }, 
+              max: {
+                value: 99999999,
+                message: '1から99999999の数値を入力してください'
+              }
+            })}
+            error={Boolean(errors.quantity)}
+            helperText={errors.quantity?.message?.toString() || ''}
+          />
+        </Box>
+        <Button variant='contained' type='submit' onClick={() => setAction('purchase')}>商品を仕入れる</Button>
+        <Button variant='contained' type='submit' onClick={() => setAction('sell')}>商品を卸す</Button>
+      </Box>
+      <Typography variant='h6'>在庫履歴</Typography>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>処理種別</TableCell>
+              <TableCell>処理日時</TableCell>
+              <TableCell>単価</TableCell>
+              <TableCell>数量</TableCell>
+              <TableCell>価格</TableCell>
+              <TableCell>在庫数</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data.map((data: InventoryData) => (
+              <TableRow key={data.id}>
+                <TableCell>{data.type}</TableCell>
+                <TableCell>{data.date}</TableCell>
+                <TableCell>{data.unit}</TableCell>
+                <TableCell>{data.quantity}</TableCell>
+                <TableCell>{data.price}</TableCell>
+                <TableCell>{data.inventory}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </>
   )
 }
