@@ -23,5 +23,6 @@ urlpatterns = [
     # api/hello/というリクエストがきたら api/hello/urls.pyの定義をみる
     path('api/hello/', include('api.hello.urls')),
     # api/hello_db/というリクエストがきたら api/hello_db/urls.pyの定義をみる
-    path('api/hello_db/', include('api.hello_db.urls'))
+    path('api/hello_db/', include('api.hello_db.urls')),
+    path('api/inventory/', include('api.inventory.urls')),
 ]
