@@ -28,7 +28,7 @@ import {
   Delete as DeleteIcon,
   Edit as EditIcon,
 } from '@mui/icons-material';
-import { error } from 'console';
+import axios from 'axios';
 
 type ProductData = {
   id: number | null;
@@ -61,7 +61,11 @@ export default function Page() {
   }
 
   useEffect(() => {
-    setData(productsData);
+    axios.get('/api/inventory/products')
+    .then((res) => res.data)
+    .then((data) => {
+      setData(data);
+    })
   }, [open])
 
   const [id, setId] = useState<number | null>(0);
