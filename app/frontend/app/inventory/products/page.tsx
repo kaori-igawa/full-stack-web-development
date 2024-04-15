@@ -2,7 +2,6 @@
 
 import { useForm } from 'react-hook-form';
 import React, { useState, useEffect } from "react";
-import productsData from './sample/dummy_products.json';
 import Link from 'next/link';
 import {
   Alert,
@@ -107,7 +106,9 @@ export default function Page() {
   }
 
   const handleAdd = (data: ProductData) => {
-    result('success', '商品が登録されました')
+    axios.post('/api/inventory/products', data).then((response) => {
+      result('success', '商品が登録されました')
+    });
     setId(0);
   }
 
@@ -127,12 +128,16 @@ export default function Page() {
   }
 
   const handleEdit = (data: ProductData) => {
-    result('success', '商品が更新されました')
+    axios.put(`/api/inventory/products/${data.id}`, data).then((response) => {
+      result('success', '商品が更新されました')
+    });
     setId(0);
   }
 
   const handleDelete = (id: number) => {
-    result('success', '商品が削除されました')
+    axios.delete(`/api/inventory/products/${id}`).then((response) => {
+      result('success', '商品が削除されました')
+    });
     setId(0);
   }
 
