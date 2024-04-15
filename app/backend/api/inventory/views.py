@@ -15,6 +15,7 @@ from .serializers import InventorySerializer, ProductSerializer, PurchaseSeriali
 from rest_framework import status
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
+from api.inventory.authentication import RefreshJWTAuthentication
 
 class ProductView(APIView):
   """
@@ -139,7 +140,7 @@ class LoginView(APIView):
   
 
 class RetryView(APIView):
-  authentication_classes = [JWTAuthentication]
+  authentication_classes = [RefreshJWTAuthentication]
   permission_classes = []
 
   def post(self, request):
@@ -148,7 +149,6 @@ class RetryView(APIView):
     serializer.is_valid(raise_exception=True)
     access = serializer.validated_data.get("access", None)
     refresh = serializer.validated_data.get("refresh", None)
-
     if access:
       response = Response(status=status.HTTP_200_OK)
       max_age = settings.COOKIE_TIME

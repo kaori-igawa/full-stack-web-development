@@ -27,7 +27,7 @@ import {
   Delete as DeleteIcon,
   Edit as EditIcon,
 } from '@mui/icons-material';
-import axios from 'axios';
+import axios from '../../../plugins/axios';
 
 type ProductData = {
   id: number | null;
