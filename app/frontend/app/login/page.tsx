@@ -13,7 +13,7 @@ import {
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { useState} from 'react';
-import { error } from 'console';
+import axios from 'axios';
 
 type FormData = {
   username: string;
@@ -41,7 +41,12 @@ export default function Page() {
   };
 
   const handleLogin = (data: FormData) => {
-    router.push('/inventory/products');
+    axios.post('/api/inventory/login', data).then((response) => {
+      router.push('/inventory/products');
+    })
+    .catch(function (error) {
+      setAuthError('ユーザー名またはパスワードに誤りがあります。');
+    });
   };
 
   return (
@@ -60,7 +65,7 @@ export default function Page() {
           <Box component='form' onSubmit={handleSubmit(onSubmit)}>
             {authError && (
               <Typography variant='body2' color='error'>
-                (authError)
+                {authError}
               </Typography>
             )}{''}
             <TextField
