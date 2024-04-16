@@ -1,6 +1,14 @@
 from django.db import models
 
 # Create your models here.
+class Status(models.IntegerChoices):
+  """""
+  状態
+  """""
+  SYNC = 0, '同期'
+  ASINC_UNPROCESSED = 1, '非同期_未処理'
+  ASINC_PROCESSED = 2, '非同期_処理済'
+
 class Product(models.Model):
   """""
   商品
@@ -25,6 +33,17 @@ class Purchase(models.Model):
   class Meta:
     db_table = 'purchase'
     verbose_name = '仕入'
+
+class SalesFile(models.Model):
+  """
+  売上ファイル
+  """
+  file_name = models.CharField(max_length=100, verbose_name='ファイル名')
+  status = models.IntegerField(choices=Status.choices, verbose_name='状態')
+
+  class Meta:
+    db_table = 'sales_file'
+    verbose_name = '売上ファイル'
     
 
 class Sales(models.Model):
@@ -34,6 +53,7 @@ class Sales(models.Model):
   product = models.ForeignKey(Product, on_delete=models.CASCADE)
   quantity = models.IntegerField(verbose_name='数量')
   sales_date = models.DateTimeField(verbose_name='売上日時')
+  import_file = models.ForeignKey(SalesFile, on_delete=models.CASCADE, verbose_name='売上ファイルID')
 
   class Meta:
     db_table = 'sales'
