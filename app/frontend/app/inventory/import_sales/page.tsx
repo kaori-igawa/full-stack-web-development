@@ -1,12 +1,19 @@
 'use client'
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "../../../plugins/axios";
 import {
   Alert,
   AlertColor,
   Box,
   Button,
+  Paper,
   Snackbar,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   Typography,
 } from '@mui/material';
 import { MuiFileInput } from "mui-file-input";
@@ -53,6 +60,16 @@ export default function Page() {
     setOpen(false);
   };
 
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    axios.get('/api/inventory/summary')
+      .then((res) => res.data)
+      .then((data) => {
+        setData(data);
+      })
+  }, [open])
+
   return (
     <Box>
       <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
@@ -60,9 +77,30 @@ export default function Page() {
       </Snackbar>
       <Typography variant="h5">売上一括登録</Typography>
       <Box m={2}>
-        <Typography variant="subtitle1">動機でファイル取込</Typography>
+        <Typography variant="subtitle1">同期でファイル取込</Typography>
         <MuiFileInput value={fileSync} onChange={onChangeFileSync} />
         <Button variant="contained" onClick={doAddSync}>登録</Button>
+      </Box>
+      <Box m={2}>
+        <Typography variant="subtitle1">年月ごとの売上集計</Typography>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>処理月</TableCell>
+                <TableCell>合計数量</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data.map((data: any) => (
+                <TableRow key={data.monthly_date}>
+                  <TableCell>{data.monthly_date}</TableCell>
+                  <TableCell>{data.monthly_price}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Box>
     </Box>
   )
