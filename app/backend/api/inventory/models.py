@@ -10,6 +10,17 @@ class Status(models.IntegerChoices):
   ASINC_PROCESSED = 2, '非同期_処理済'
 
 
+class Category(models.Model):
+  """""
+  カテゴリー
+  """""
+  name = models.CharField(max_length=100, verbose_name='カテゴリ名')
+  parent_category = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
+
+  class Meta:
+    db_table = 'category'
+    verbose_name = 'カテゴリー'
+
 class Product(models.Model):
   """""
   商品
@@ -17,6 +28,7 @@ class Product(models.Model):
   name = models.CharField(max_length=100, verbose_name='商品名')
   price = models.IntegerField(verbose_name='価格')
   description = models.TextField(verbose_name='商品説明', null=True, blank=True)
+  category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.CASCADE)
 
   class Meta:
     db_table = 'product'
