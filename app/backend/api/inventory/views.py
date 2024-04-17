@@ -175,7 +175,19 @@ class LogoutView(APIView):
   
 
 class SalesAsyncView(APIView):
-  pass
+  def post(self, request, format=None):
+    serializer = FileSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+
+    filename = serializer.validated_data['file'].name
+
+    with open(filename, 'wb') as f:
+      f.write(serializer.validated_data['file'].read())
+    
+    Sales_file = SalesFile(file_name=filename, status=Status.ASINC_UNPROCESSED)
+    Sales_file.save()
+
+    return Response(status=201)
 
 
 class SalesSyncView(APIView):
