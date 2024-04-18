@@ -9,6 +9,5 @@ def common_load_fixture(migration_filename):
 
   target = os.path.splitext(migration_filename)[0].replace('migrations', 'fixtures')
   base_yaml_name = target + '/base.yaml'
-  print(base_yaml_name)
 
   call_command('loaddata', '--settings', setting_file, '--format=yaml', base_yaml_name)
