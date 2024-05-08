@@ -4,7 +4,7 @@ services:
     command: 
       --collation-server=utf8mb4_0900_bin
       --transaction-isolation=READ-COMMITTED
-    restart: always
+    # restart: always
     environment:
       MYSQL_ROOT_PASSWORD: password
       TZ: Asia/Tokyo
